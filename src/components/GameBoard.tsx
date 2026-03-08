@@ -205,12 +205,6 @@ export function GameBoard() {
   }
 
   const round = game.round;
-  const buzzingPlayerName =
-    game.buzz.player === "player1"
-      ? game.playerOneName
-      : game.buzz.player === "player2"
-        ? game.playerTwoName
-        : null;
   const wrongGuesses = round?.wrongGuesses ?? [];
   const playerOneGuesses = wrongGuesses.filter(
     (guess: any) => guess.player === "player1",
@@ -223,93 +217,50 @@ export function GameBoard() {
 
   return round ? (
     <main
-      className={`grid h-full min-h-0 flex-1 grid-rows-[auto_minmax(0,1fr)_auto] gap-2 overflow-hidden ${feedbackClasses[feedbackClass] ?? ""}`}
+      className={`grid h-full min-h-0 flex-1 grid-rows-[auto_minmax(0,1fr)_auto] gap-3 overflow-hidden ${feedbackClasses[feedbackClass] ?? ""}`}
     >
-      <section className="grid gap-2 xl:grid-cols-[minmax(0,1.95fr)_220px]">
+      <section className="grid gap-3 xl:grid-cols-[minmax(0,2.25fr)_190px]">
         <section className={`${panelClassName} px-4 py-4 sm:px-5`}>
-          <p className={eyebrowClassName}>International Women's Day Feud</p>
-          <div className="mt-2 flex flex-wrap gap-2">
-            <span className="rounded-full border border-white/10 bg-white/7 px-3 py-1 text-xs font-medium text-pink-50/90 sm:text-sm">
-              Round {game.currentRoundIndex + 1} of {game.totalRounds}
-            </span>
-            <span className="rounded-full border border-pink-300/20 bg-pink-500/12 px-3 py-1 text-xs font-medium text-pink-100 sm:text-sm">
-              {game.lastEvent.title}
-            </span>
-          </div>
-          <h2 className="mt-3 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-            {round.title}
-          </h2>
-          <p className="mt-2 max-w-5xl text-lg font-extrabold leading-tight text-pink-50 sm:text-xl xl:text-[1.75rem]">
+          <p className="max-w-6xl text-3xl font-extrabold leading-[1.08] text-pink-50 sm:text-4xl xl:text-[3.3rem]">
             {round.prompt}
           </p>
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            {buzzingPlayerName ? (
-              <>
-                <span className="rounded-full border border-amber-200/20 bg-amber-300/14 px-3 py-1 text-xs font-semibold text-amber-100 sm:text-sm">
-                  Buzzed First
-                </span>
-                <strong className="text-base font-semibold text-white sm:text-lg">
-                  {buzzingPlayerName}
-                </strong>
-              </>
-            ) : (
-              <>
-                <span className="rounded-full border border-white/10 bg-white/7 px-3 py-1 text-xs font-semibold text-pink-50/90 sm:text-sm">
-                  Buzzers Open
-                </span>
-                <strong className="text-base font-semibold text-white sm:text-lg">
-                  Waiting for a key press
-                </strong>
-              </>
-            )}
-          </div>
-          <div
-            className={`mt-3 flex flex-wrap items-center gap-2 rounded-[20px] border border-pink-200/10 bg-black/30 px-3 py-2 ${feedbackClasses[feedbackClass] ?? ""}`}
-          >
-            <strong className="text-sm text-white sm:text-base">
-              {game.lastEvent.title}
-            </strong>
-            <span className="text-sm text-pink-100/75">
-              {game.lastEvent.detail}
-            </span>
-          </div>
         </section>
 
-        <section className="grid gap-2 xl:grid-rows-2">
+        <section className="grid gap-3 xl:grid-rows-2">
           <article
-            className={`${panelClassName} ${softPanelClassName} px-4 py-3`}
+            className={`${panelClassName} ${softPanelClassName} px-3 py-2.5`}
           >
-            <p className="text-xs uppercase tracking-[0.18em] text-pink-200/70 sm:text-sm">
+            <p className="text-[0.7rem] uppercase tracking-[0.16em] text-pink-200/70 sm:text-xs">
               {game.playerOneName}
             </p>
-            <strong className="mt-2 block text-4xl font-extrabold leading-none text-white sm:text-5xl">
+            <strong className="mt-1 block text-3xl font-extrabold leading-none text-white sm:text-4xl">
               {game.scores.player1}
             </strong>
-            <span className="mt-2 inline-flex rounded-full border border-pink-300/25 bg-pink-500/10 px-3 py-1 text-xs text-pink-100 sm:text-sm">
+            <span className="mt-1.5 inline-flex rounded-full border border-pink-300/25 bg-pink-500/10 px-2.5 py-0.5 text-[0.68rem] text-pink-100 sm:text-xs">
               Key {game.playerOneKey}
             </span>
           </article>
           <article
-            className={`${panelClassName} ${softPanelClassName} px-4 py-3`}
+            className={`${panelClassName} ${softPanelClassName} px-3 py-2.5`}
           >
-            <p className="text-xs uppercase tracking-[0.18em] text-pink-200/70 sm:text-sm">
+            <p className="text-[0.7rem] uppercase tracking-[0.16em] text-pink-200/70 sm:text-xs">
               {game.playerTwoName}
             </p>
-            <strong className="mt-2 block text-4xl font-extrabold leading-none text-white sm:text-5xl">
+            <strong className="mt-1 block text-3xl font-extrabold leading-none text-white sm:text-4xl">
               {game.scores.player2}
             </strong>
-            <span className="mt-2 inline-flex rounded-full border border-pink-300/25 bg-pink-500/10 px-3 py-1 text-xs text-pink-100 sm:text-sm">
+            <span className="mt-1.5 inline-flex rounded-full border border-pink-300/25 bg-pink-500/10 px-2.5 py-0.5 text-[0.68rem] text-pink-100 sm:text-xs">
               Key {game.playerTwoKey}
             </span>
           </article>
         </section>
       </section>
 
-      <section className="grid min-h-0 auto-rows-fr grid-cols-2 gap-2 md:grid-cols-3 xl:grid-cols-4">
+      <section className="grid min-h-0 auto-rows-fr grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4">
         {round.answers.map((answer: any, index: number) => (
           <article
             className={[
-              "relative flex min-h-0 flex-col justify-between overflow-hidden rounded-[22px] border px-3 py-3 transition sm:px-4 sm:py-4",
+              "relative flex min-h-[210px] flex-col justify-between overflow-hidden rounded-[24px] border px-4 py-4 transition xl:min-h-[260px] xl:px-5 xl:py-5",
               answer.revealed
                 ? "border-pink-300/25 bg-[linear-gradient(180deg,rgba(255,53,146,0.26),rgba(18,4,13,0.96))] text-white"
                 : "border-white/8 bg-[linear-gradient(180deg,rgba(22,8,18,0.94),rgba(8,3,7,0.98))] text-pink-100/82",
@@ -319,20 +270,20 @@ export function GameBoard() {
             ].join(" ")}
             key={answer.id}
           >
-            <span className="text-[0.65rem] font-semibold uppercase tracking-[0.24em] text-pink-200/60 sm:text-xs">
+            <span className="text-[0.82rem] font-semibold uppercase tracking-[0.22em] text-pink-200/60 sm:text-[0.9rem]">
               Answer {index + 1}
             </span>
             {answer.revealed ? (
-              <div className="mt-2 flex h-full items-end justify-between gap-3">
-                <strong className="text-lg font-bold leading-tight sm:text-xl">
+              <div className="mt-4 flex h-full items-end justify-between gap-3">
+                <strong className="text-2xl font-bold leading-tight sm:text-[2rem] xl:text-[2.4rem]">
                   {answer.text}
                 </strong>
-                <span className="rounded-full border border-white/10 bg-black/30 px-2.5 py-1 text-base font-bold text-pink-50 sm:px-3 sm:text-lg">
+                <span className="rounded-full border border-white/10 bg-black/30 px-3 py-1.5 text-xl font-bold text-pink-50 xl:text-2xl">
                   {answer.points}
                 </span>
               </div>
             ) : (
-              <strong className="mt-3 text-center text-5xl font-black text-pink-100/80 sm:text-6xl">
+              <strong className="mt-6 text-center text-7xl font-black text-pink-100/80 sm:text-8xl">
                 ?
               </strong>
             )}
