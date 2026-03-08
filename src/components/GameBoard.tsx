@@ -66,6 +66,7 @@ export function GameBoard() {
   const game = useQuery(api.game.current, {}) as any;
   const registerBuzz = useMutation(api.game.registerBuzz);
   const pressedKeys = useRef(new Set<string>());
+  const boardRef = useRef<HTMLElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const previousEventId = useRef<string | null>(null);
   const previousRevealedCount = useRef(0);
@@ -73,11 +74,33 @@ export function GameBoard() {
   const [highlightAnswerId, setHighlightAnswerId] = useState<string | null>(
     null,
   );
+  const [buzzToast, setBuzzToast] = useState<string | null>(null);
+
+  useEffect(() => {
+    const focusBoard = () => {
+      boardRef.current?.focus();
+    };
+
+    focusBoard();
+    window.addEventListener("focus", focusBoard);
+    window.addEventListener("pointerdown", focusBoard);
+
+    return () => {
+      window.removeEventListener("focus", focusBoard);
+      window.removeEventListener("pointerdown", focusBoard);
+    };
+  }, []);
 
   useEffect(() => {
     if (!game) {
       return;
     }
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        boardRef.current?.focus();
+      }
+    };
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.repeat) {
@@ -104,12 +127,14 @@ export function GameBoard() {
       pressedKeys.current.delete(event.key.toUpperCase());
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
+    window.addEventListener("keydown", handleKeyDown, true);
+    window.addEventListener("keyup", handleKeyUp, true);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
+      window.removeEventListener("keydown", handleKeyDown, true);
+      window.removeEventListener("keyup", handleKeyUp, true);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [game, registerBuzz]);
 
@@ -147,6 +172,29 @@ export function GameBoard() {
     }
 
     previousEventId.current = game.lastEvent.id;
+    if (game.lastEvent.type === "buzz") {
+      const nextBuzzToast =
+        game.lastEvent.player === "player1"
+          ? `${game.playerOneName} buzzed in first`
+          : game.lastEvent.player === "player2"
+            ? `${game.playerTwoName} buzzed in first`
+            : game.lastEvent.title;
+      setBuzzToast(nextBuzzToast);
+      const toastTimeoutId = window.setTimeout(() => setBuzzToast(null), 2200);
+      if (audioContextRef.current) {
+        playEventSound(audioContextRef.current, game.lastEvent.type);
+      }
+
+      const nextClass = "feedback-buzz";
+      setFeedbackClass(nextClass);
+      const timeoutId = window.setTimeout(() => setFeedbackClass(""), 1200);
+
+      return () => {
+        window.clearTimeout(toastTimeoutId);
+        window.clearTimeout(timeoutId);
+      };
+    }
+
     if (audioContextRef.current) {
       playEventSound(audioContextRef.current, game.lastEvent.type);
     }
@@ -183,6 +231,8 @@ export function GameBoard() {
   if (game === undefined) {
     return (
       <main
+        ref={boardRef}
+        tabIndex={-1}
         className={`${panelClassName} flex min-h-[220px] items-center justify-center px-6 py-8 text-lg font-medium`}
       >
         Loading game…
@@ -193,6 +243,8 @@ export function GameBoard() {
   if (game === null) {
     return (
       <main
+        ref={boardRef}
+        tabIndex={-1}
         className={`${panelClassName} flex min-h-[320px] flex-col items-center justify-center gap-3 px-6 py-10 text-center`}
       >
         <h2 className="text-2xl font-bold text-white">No round loaded</h2>
@@ -217,8 +269,21 @@ export function GameBoard() {
 
   return round ? (
     <main
+      ref={boardRef}
+      tabIndex={-1}
       className={`grid h-full min-h-0 flex-1 grid-rows-[auto_minmax(0,1fr)_auto] gap-3 overflow-hidden ${feedbackClasses[feedbackClass] ?? ""}`}
     >
+      {buzzToast ? (
+        <section className="pointer-events-none fixed left-1/2 top-6 z-20 w-[min(92vw,34rem)] -translate-x-1/2 rounded-[24px] border border-amber-300/30 bg-[linear-gradient(180deg,rgba(255,196,87,0.24),rgba(64,24,3,0.96))] px-5 py-4 text-center shadow-[0_0_0_1px_rgba(255,214,102,0.16),0_24px_60px_rgba(0,0,0,0.42),0_0_42px_rgba(255,184,77,0.16)] backdrop-blur">
+          <p className="text-[0.72rem] uppercase tracking-[0.28em] text-amber-100/75">
+            Buzzer Alert
+          </p>
+          <strong className="mt-1 block text-2xl font-extrabold text-white sm:text-3xl">
+            {buzzToast}
+          </strong>
+        </section>
+      ) : null}
+
       <section className="grid gap-3 xl:grid-cols-[minmax(0,2.25fr)_190px]">
         <section className={`${panelClassName} px-4 py-4 sm:px-5`}>
           <p className="max-w-6xl text-3xl font-extrabold leading-[1.08] text-pink-50 sm:text-4xl xl:text-[3.3rem]">
