@@ -19,22 +19,27 @@ const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
 
 export default function App() {
   const location = useLocation();
-  const shellClassName =
-    location.pathname === "/" ? shellByRoute.board : shellByRoute.admin;
+  const isBoardRoute = location.pathname === "/";
+  const shellClassName = isBoardRoute ? shellByRoute.board : shellByRoute.admin;
+  const headerClassName = isBoardRoute
+    ? "mb-2 flex flex-wrap items-center justify-between gap-3"
+    : "mb-3 flex flex-wrap items-center justify-between gap-4 md:mb-6";
+  const titleClassName = isBoardRoute
+    ? "text-2xl font-extrabold tracking-tight text-white sm:text-3xl"
+    : "text-3xl font-extrabold tracking-tight text-white sm:text-4xl";
+  const navClassName = isBoardRoute ? "flex gap-2" : "flex gap-3";
 
   return (
     <div className={shellClassName}>
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,62,151,0.12),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(255,145,203,0.12),transparent_22%)]" />
-      <header className="mb-3 flex flex-wrap items-center justify-between gap-4 md:mb-6">
+      <header className={headerClassName}>
         <div>
-          <p className="mb-1 text-[0.72rem] uppercase tracking-[0.28em] text-pink-200/70">
+          <p className="mb-1 text-[0.68rem] uppercase tracking-[0.28em] text-pink-200/70">
             ACM Women's Day Edition
           </p>
-          <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-            Pink Feud Keyboard Edition
-          </h1>
+          <h1 className={titleClassName}>Pink Feud Keyboard Edition</h1>
         </div>
-        <nav className="flex gap-3" aria-label="Views">
+        <nav className={navClassName} aria-label="Views">
           <NavLink className={navLinkClassName} to="/">
             Game Board
           </NavLink>

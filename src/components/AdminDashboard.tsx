@@ -17,7 +17,8 @@ const insetCardClassName =
 const eyebrowClassName =
   "text-[0.72rem] uppercase tracking-[0.28em] text-pink-200/65";
 const fieldClassName =
-  "mt-2 w-full rounded-2xl border border-pink-200/10 bg-black/35 px-4 py-3 text-white outline-none transition placeholder:text-pink-100/35 focus:border-pink-300/45 focus:bg-black/45";
+  "w-full rounded-2xl border border-pink-200/10 bg-black/35 px-4 py-3 text-white outline-none transition placeholder:text-pink-100/35 focus:border-pink-300/45 focus:bg-black/45";
+const stackedFieldClassName = `mt-2 ${fieldClassName}`;
 const secondaryButtonClassName =
   "rounded-full border border-pink-200/15 bg-white/5 px-4 py-2.5 text-sm font-semibold text-pink-50 transition hover:-translate-y-0.5 hover:border-pink-300/35 hover:bg-pink-500/12";
 const dangerButtonClassName =
@@ -152,15 +153,21 @@ export function AdminDashboard() {
   };
 
   if (game === undefined) {
-    return <main className="panel">Loading admin…</main>;
+    return (
+      <main
+        className={`${panelClassName} flex min-h-[220px] items-center justify-center text-lg font-medium`}
+      >
+        Loading admin...
+      </main>
+    );
   }
 
   const activeTeam = game?.buzz.player ?? selectedTeam;
   const liveRound = game?.round;
 
   return (
-    <main className="flex flex-wrap gap-4 xl:flex-nowrap">
-      <section className={`${panelClassName} grid flex-1 gap-4`}>
+    <main className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_400px]">
+      <section className={`${panelClassName} grid min-w-0 gap-4`}>
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className={eyebrowClassName}>Match Setup</p>
@@ -185,7 +192,7 @@ export function AdminDashboard() {
             <label className="text-sm font-medium text-pink-50">
               Player one name
               <input
-                className={fieldClassName}
+                className={stackedFieldClassName}
                 onChange={(event) =>
                   setForm((current) => ({
                     ...current,
@@ -198,7 +205,7 @@ export function AdminDashboard() {
             <label className="text-sm font-medium text-pink-50">
               Player one key
               <input
-                className={fieldClassName}
+                className={stackedFieldClassName}
                 maxLength={1}
                 onChange={(event) =>
                   setForm((current) => ({
@@ -212,7 +219,7 @@ export function AdminDashboard() {
             <label className="text-sm font-medium text-pink-50">
               Player two name
               <input
-                className={fieldClassName}
+                className={stackedFieldClassName}
                 onChange={(event) =>
                   setForm((current) => ({
                     ...current,
@@ -225,7 +232,7 @@ export function AdminDashboard() {
             <label className="text-sm font-medium text-pink-50">
               Player two key
               <input
-                className={fieldClassName}
+                className={stackedFieldClassName}
                 maxLength={1}
                 onChange={(event) =>
                   setForm((current) => ({
@@ -261,11 +268,11 @@ export function AdminDashboard() {
               </button>
             </div>
 
-            <div className="flex flex-wrap gap-3">
+            <div className="-mx-1 flex gap-3 overflow-x-auto px-1 pb-1">
               {form.rounds.map((round, index) => (
                 <button
                   className={[
-                    "flex min-w-[150px] items-center gap-3 rounded-[22px] border px-4 py-3 text-left transition",
+                    "flex min-w-[150px] shrink-0 items-center gap-3 rounded-[22px] border px-4 py-3 text-left transition",
                     round.id === selectedRound?.id
                       ? "border-pink-300/35 bg-pink-500/16 text-white shadow-[0_0_35px_rgba(255,72,158,0.18)]"
                       : "border-white/10 bg-white/5 text-pink-50 hover:border-pink-300/25 hover:bg-pink-500/10",
@@ -288,7 +295,7 @@ export function AdminDashboard() {
               <label className="text-sm font-medium text-pink-50">
                 Round title
                 <input
-                  className={fieldClassName}
+                  className={stackedFieldClassName}
                   onChange={(event) =>
                     updateSelectedRound((round) => ({
                       ...round,
@@ -301,7 +308,7 @@ export function AdminDashboard() {
               <label className="text-sm font-medium text-pink-50">
                 Prompt
                 <textarea
-                  className={`${fieldClassName} min-h-28 resize-y`}
+                  className={`${stackedFieldClassName} min-h-28 resize-y`}
                   onChange={(event) =>
                     updateSelectedRound((round) => ({
                       ...round,
@@ -407,7 +414,7 @@ export function AdminDashboard() {
       </section>
 
       <section
-        className={`${panelClassName} grid w-full gap-4 xl:max-w-[420px]`}
+        className={`${panelClassName} grid w-full gap-4 xl:sticky xl:top-3`}
       >
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>

@@ -223,89 +223,93 @@ export function GameBoard() {
 
   return round ? (
     <main
-      className={`grid flex-1 grid-rows-[auto_1fr_auto] gap-3 ${feedbackClasses[feedbackClass] ?? ""}`}
+      className={`grid h-full min-h-0 flex-1 grid-rows-[auto_minmax(0,1fr)_auto] gap-2 overflow-hidden ${feedbackClasses[feedbackClass] ?? ""}`}
     >
-      <section className="grid gap-3 xl:grid-cols-[minmax(0,1.8fr)_minmax(260px,0.82fr)]">
-        <section className={`${panelClassName} px-5 py-5 sm:px-6`}>
+      <section className="grid gap-2 xl:grid-cols-[minmax(0,1.95fr)_220px]">
+        <section className={`${panelClassName} px-4 py-4 sm:px-5`}>
           <p className={eyebrowClassName}>International Women's Day Feud</p>
-          <div className="mt-4 flex flex-wrap gap-3">
-            <span className="rounded-full border border-white/10 bg-white/7 px-3 py-1.5 text-sm text-pink-50/90">
+          <div className="mt-2 flex flex-wrap gap-2">
+            <span className="rounded-full border border-white/10 bg-white/7 px-3 py-1 text-xs font-medium text-pink-50/90 sm:text-sm">
               Round {game.currentRoundIndex + 1} of {game.totalRounds}
             </span>
-            <span className="rounded-full border border-pink-300/20 bg-pink-500/12 px-3 py-1.5 text-sm text-pink-100">
+            <span className="rounded-full border border-pink-300/20 bg-pink-500/12 px-3 py-1 text-xs font-medium text-pink-100 sm:text-sm">
               {game.lastEvent.title}
             </span>
           </div>
-          <h2 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          <h2 className="mt-3 text-2xl font-bold tracking-tight text-white sm:text-3xl">
             {round.title}
           </h2>
-          <p className="mt-3 max-w-4xl text-xl font-extrabold leading-tight text-pink-50 sm:text-2xl xl:text-[2.1rem]">
+          <p className="mt-2 max-w-5xl text-lg font-extrabold leading-tight text-pink-50 sm:text-xl xl:text-[1.75rem]">
             {round.prompt}
           </p>
-          <div className="mt-5 flex flex-wrap items-center gap-3">
+          <div className="mt-3 flex flex-wrap items-center gap-2">
             {buzzingPlayerName ? (
               <>
-                <span className="rounded-full border border-amber-200/20 bg-amber-300/14 px-3 py-1.5 text-sm font-semibold text-amber-100">
+                <span className="rounded-full border border-amber-200/20 bg-amber-300/14 px-3 py-1 text-xs font-semibold text-amber-100 sm:text-sm">
                   Buzzed First
                 </span>
-                <strong className="text-lg font-semibold text-white">
+                <strong className="text-base font-semibold text-white sm:text-lg">
                   {buzzingPlayerName}
                 </strong>
               </>
             ) : (
               <>
-                <span className="rounded-full border border-white/10 bg-white/7 px-3 py-1.5 text-sm font-semibold text-pink-50/90">
+                <span className="rounded-full border border-white/10 bg-white/7 px-3 py-1 text-xs font-semibold text-pink-50/90 sm:text-sm">
                   Buzzers Open
                 </span>
-                <strong className="text-lg font-semibold text-white">
+                <strong className="text-base font-semibold text-white sm:text-lg">
                   Waiting for a key press
                 </strong>
               </>
             )}
           </div>
           <div
-            className={`mt-5 flex flex-wrap items-center gap-3 rounded-[22px] border border-pink-200/10 bg-black/30 px-4 py-3 ${feedbackClasses[feedbackClass] ?? ""}`}
+            className={`mt-3 flex flex-wrap items-center gap-2 rounded-[20px] border border-pink-200/10 bg-black/30 px-3 py-2 ${feedbackClasses[feedbackClass] ?? ""}`}
           >
-            <strong className="text-white">{game.lastEvent.title}</strong>
-            <span className="text-pink-100/75">{game.lastEvent.detail}</span>
+            <strong className="text-sm text-white sm:text-base">
+              {game.lastEvent.title}
+            </strong>
+            <span className="text-sm text-pink-100/75">
+              {game.lastEvent.detail}
+            </span>
           </div>
         </section>
 
-        <section className="grid gap-3">
+        <section className="grid gap-2 xl:grid-rows-2">
           <article
-            className={`${panelClassName} ${softPanelClassName} px-4 py-4`}
+            className={`${panelClassName} ${softPanelClassName} px-4 py-3`}
           >
-            <p className="text-sm uppercase tracking-[0.18em] text-pink-200/70">
+            <p className="text-xs uppercase tracking-[0.18em] text-pink-200/70 sm:text-sm">
               {game.playerOneName}
             </p>
-            <strong className="mt-3 block text-5xl font-extrabold leading-none text-white">
+            <strong className="mt-2 block text-4xl font-extrabold leading-none text-white sm:text-5xl">
               {game.scores.player1}
             </strong>
-            <span className="mt-3 inline-flex rounded-full border border-pink-300/25 bg-pink-500/10 px-3 py-1 text-sm text-pink-100">
+            <span className="mt-2 inline-flex rounded-full border border-pink-300/25 bg-pink-500/10 px-3 py-1 text-xs text-pink-100 sm:text-sm">
               Key {game.playerOneKey}
             </span>
           </article>
           <article
-            className={`${panelClassName} ${softPanelClassName} px-4 py-4`}
+            className={`${panelClassName} ${softPanelClassName} px-4 py-3`}
           >
-            <p className="text-sm uppercase tracking-[0.18em] text-pink-200/70">
+            <p className="text-xs uppercase tracking-[0.18em] text-pink-200/70 sm:text-sm">
               {game.playerTwoName}
             </p>
-            <strong className="mt-3 block text-5xl font-extrabold leading-none text-white">
+            <strong className="mt-2 block text-4xl font-extrabold leading-none text-white sm:text-5xl">
               {game.scores.player2}
             </strong>
-            <span className="mt-3 inline-flex rounded-full border border-pink-300/25 bg-pink-500/10 px-3 py-1 text-sm text-pink-100">
+            <span className="mt-2 inline-flex rounded-full border border-pink-300/25 bg-pink-500/10 px-3 py-1 text-xs text-pink-100 sm:text-sm">
               Key {game.playerTwoKey}
             </span>
           </article>
         </section>
       </section>
 
-      <section className="grid auto-rows-fr gap-3 sm:grid-cols-2 xl:grid-cols-3">
+      <section className="grid min-h-0 auto-rows-fr grid-cols-2 gap-2 md:grid-cols-3 xl:grid-cols-4">
         {round.answers.map((answer: any, index: number) => (
           <article
             className={[
-              "relative flex min-h-[132px] flex-col justify-between overflow-hidden rounded-[26px] border px-5 py-4 transition",
+              "relative flex min-h-0 flex-col justify-between overflow-hidden rounded-[22px] border px-3 py-3 transition sm:px-4 sm:py-4",
               answer.revealed
                 ? "border-pink-300/25 bg-[linear-gradient(180deg,rgba(255,53,146,0.26),rgba(18,4,13,0.96))] text-white"
                 : "border-white/8 bg-[linear-gradient(180deg,rgba(22,8,18,0.94),rgba(8,3,7,0.98))] text-pink-100/82",
@@ -315,20 +319,20 @@ export function GameBoard() {
             ].join(" ")}
             key={answer.id}
           >
-            <span className="text-xs font-semibold uppercase tracking-[0.28em] text-pink-200/60">
+            <span className="text-[0.65rem] font-semibold uppercase tracking-[0.24em] text-pink-200/60 sm:text-xs">
               Answer {index + 1}
             </span>
             {answer.revealed ? (
-              <div className="mt-3 flex h-full items-end justify-between gap-4">
-                <strong className="text-2xl font-bold leading-tight">
+              <div className="mt-2 flex h-full items-end justify-between gap-3">
+                <strong className="text-lg font-bold leading-tight sm:text-xl">
                   {answer.text}
                 </strong>
-                <span className="rounded-full border border-white/10 bg-black/30 px-3 py-1 text-lg font-bold text-pink-50">
+                <span className="rounded-full border border-white/10 bg-black/30 px-2.5 py-1 text-base font-bold text-pink-50 sm:px-3 sm:text-lg">
                   {answer.points}
                 </span>
               </div>
             ) : (
-              <strong className="mt-6 text-center text-6xl font-black text-pink-100/80">
+              <strong className="mt-3 text-center text-5xl font-black text-pink-100/80 sm:text-6xl">
                 ?
               </strong>
             )}
@@ -336,18 +340,18 @@ export function GameBoard() {
         ))}
       </section>
 
-      <section className="grid gap-3 md:grid-cols-2">
-        <article className={`${panelClassName} px-5 py-5`}>
+      <section className="grid gap-2 md:grid-cols-2">
+        <article className={`${panelClassName} px-4 py-3`}>
           <p className={eyebrowClassName}>{playerOneName} Strikes</p>
-          <div className="mt-4 grid gap-4">
+          <div className="mt-2 grid gap-2">
             <div
-              className="flex gap-3"
+              className="flex gap-2"
               aria-label={`${round.strikes.player1} strikes`}
             >
               {Array.from({ length: 3 }, (_, index) => (
                 <span
                   className={[
-                    "flex h-12 w-12 items-center justify-center rounded-2xl border text-lg font-bold transition",
+                    "flex h-10 w-10 items-center justify-center rounded-2xl border text-base font-bold transition sm:h-12 sm:w-12 sm:text-lg",
                     index < round.strikes.player1
                       ? "border-pink-300/40 bg-pink-500/20 text-pink-100"
                       : "border-white/10 bg-white/5 text-pink-100/35",
@@ -360,11 +364,11 @@ export function GameBoard() {
             </div>
             <div className="flex flex-wrap gap-2">
               {playerOneGuesses.length === 0 ? (
-                <span className="text-pink-100/60">No misses yet.</span>
+                <span className="text-sm text-pink-100/60">No misses yet.</span>
               ) : (
                 playerOneGuesses.map((guess: any) => (
                   <span
-                    className="rounded-full border border-pink-300/20 bg-pink-500/10 px-3 py-1.5 text-sm text-pink-50"
+                    className="rounded-full border border-pink-300/20 bg-pink-500/10 px-3 py-1 text-xs text-pink-50 sm:text-sm"
                     key={guess.id}
                   >
                     {guess.guess}
@@ -374,17 +378,17 @@ export function GameBoard() {
             </div>
           </div>
         </article>
-        <article className={`${panelClassName} px-5 py-5`}>
+        <article className={`${panelClassName} px-4 py-3`}>
           <p className={eyebrowClassName}>{playerTwoName} Strikes</p>
-          <div className="mt-4 grid gap-4">
+          <div className="mt-2 grid gap-2">
             <div
-              className="flex gap-3"
+              className="flex gap-2"
               aria-label={`${round.strikes.player2} strikes`}
             >
               {Array.from({ length: 3 }, (_, index) => (
                 <span
                   className={[
-                    "flex h-12 w-12 items-center justify-center rounded-2xl border text-lg font-bold transition",
+                    "flex h-10 w-10 items-center justify-center rounded-2xl border text-base font-bold transition sm:h-12 sm:w-12 sm:text-lg",
                     index < round.strikes.player2
                       ? "border-pink-300/40 bg-pink-500/20 text-pink-100"
                       : "border-white/10 bg-white/5 text-pink-100/35",
@@ -397,11 +401,11 @@ export function GameBoard() {
             </div>
             <div className="flex flex-wrap gap-2">
               {playerTwoGuesses.length === 0 ? (
-                <span className="text-pink-100/60">No misses yet.</span>
+                <span className="text-sm text-pink-100/60">No misses yet.</span>
               ) : (
                 playerTwoGuesses.map((guess: any) => (
                   <span
-                    className="rounded-full border border-pink-300/20 bg-pink-500/10 px-3 py-1.5 text-sm text-pink-50"
+                    className="rounded-full border border-pink-300/20 bg-pink-500/10 px-3 py-1 text-xs text-pink-50 sm:text-sm"
                     key={guess.id}
                   >
                     {guess.guess}
