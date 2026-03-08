@@ -1,0 +1,1 @@
+{"root":["./src/App.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/AdminDashboard.tsx","./src/components/GameBoard.tsx","./src/lib/defaultGame.ts","./src/lib/formatting.ts","./convex/game.ts","./convex/schema.ts","./convex/_generated/api.d.ts","./convex/_generated/dataModel.d.ts","./convex/_generated/server.d.ts","./vite.config.ts"],"version":"5.9.3"}

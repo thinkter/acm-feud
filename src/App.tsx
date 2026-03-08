@@ -2,22 +2,43 @@ import { NavLink, Route, Routes, useLocation } from "react-router-dom";
 import { AdminDashboard } from "./components/AdminDashboard";
 import { GameBoard } from "./components/GameBoard";
 
+const shellBaseClassName =
+  "relative mx-auto min-h-screen w-full max-w-[1240px] px-4 pb-8 pt-3 text-[#fff5fb] sm:px-6 lg:px-8";
+const shellByRoute = {
+  board: `${shellBaseClassName} flex flex-col overflow-hidden`,
+  admin: shellBaseClassName,
+};
+
+const navLinkClassName = ({ isActive }: { isActive: boolean }) =>
+  [
+    "rounded-full border px-4 py-3 text-sm font-semibold tracking-[0.08em] transition",
+    isActive
+      ? "border-pink-300/60 bg-pink-500/30 text-white shadow-[0_0_30px_rgba(255,78,164,0.22)]"
+      : "border-white/10 bg-white/5 text-pink-100 hover:-translate-y-0.5 hover:border-pink-300/40 hover:bg-pink-500/15",
+  ].join(" ");
+
 export default function App() {
   const location = useLocation();
-  const shellClassName = location.pathname === "/" ? "shell board-shell" : "shell";
+  const shellClassName =
+    location.pathname === "/" ? shellByRoute.board : shellByRoute.admin;
 
   return (
     <div className={shellClassName}>
-      <header className="topbar">
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(255,62,151,0.12),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(255,145,203,0.12),transparent_22%)]" />
+      <header className="mb-3 flex flex-wrap items-center justify-between gap-4 md:mb-6">
         <div>
-          <p className="eyebrow">ACM Women's Day Edition</p>
-          <h1>Pink Feud Keyboard Edition</h1>
+          <p className="mb-1 text-[0.72rem] uppercase tracking-[0.28em] text-pink-200/70">
+            ACM Women's Day Edition
+          </p>
+          <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+            Pink Feud Keyboard Edition
+          </h1>
         </div>
-        <nav className="tabs" aria-label="Views">
-          <NavLink className={({ isActive }) => (isActive ? "tab active" : "tab")} to="/">
+        <nav className="flex gap-3" aria-label="Views">
+          <NavLink className={navLinkClassName} to="/">
             Game Board
           </NavLink>
-          <NavLink className={({ isActive }) => (isActive ? "tab active" : "tab")} to="/admin">
+          <NavLink className={navLinkClassName} to="/admin">
             Admin
           </NavLink>
         </nav>
