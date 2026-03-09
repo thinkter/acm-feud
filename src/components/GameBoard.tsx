@@ -4,21 +4,21 @@ import { api } from "../../convex/_generated/api";
 import { keyMatches } from "../lib/formatting";
 
 const panelClassName =
-  "rounded-[28px] border border-pink-200/10 bg-[linear-gradient(180deg,rgba(30,5,21,0.96),rgba(14,2,11,0.96))] shadow-[0_24px_60px_rgba(0,0,0,0.42)] backdrop-blur";
+  "rounded-[24px] border-2 border-black/80 bg-[#f6e8d5] shadow-[0_10px_24px_rgba(0,0,0,0.15)]";
 const softPanelClassName =
-  "rounded-[24px] border border-pink-200/10 bg-white/5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]";
+  "rounded-[20px] border border-black/20 bg-white/70";
 const eyebrowClassName =
-  "text-[0.72rem] uppercase tracking-[0.28em] text-pink-200/65";
+  "text-[0.72rem] uppercase tracking-[0.28em] text-slate-700";
 const feedbackClasses: Record<string, string> = {
   "": "",
   "feedback-correct":
-    "shadow-[0_0_0_1px_rgba(250,204,21,0.18),0_0_55px_rgba(250,204,21,0.12)]",
+    "shadow-[0_0_0_1px_rgba(244,114,182,0.2),0_0_45px_rgba(244,114,182,0.2)]",
   "feedback-wrong":
-    "shadow-[0_0_0_1px_rgba(251,113,133,0.18),0_0_55px_rgba(251,113,133,0.14)]",
+    "shadow-[0_0_0_1px_rgba(248,113,113,0.2),0_0_40px_rgba(248,113,113,0.16)]",
   "feedback-buzz":
-    "shadow-[0_0_0_1px_rgba(244,114,182,0.18),0_0_55px_rgba(244,114,182,0.16)]",
+    "shadow-[0_0_0_1px_rgba(125,211,252,0.25),0_0_45px_rgba(125,211,252,0.22)]",
   "feedback-round":
-    "shadow-[0_0_0_1px_rgba(236,72,153,0.18),0_0_55px_rgba(236,72,153,0.14)]",
+    "shadow-[0_0_0_1px_rgba(244,114,182,0.16),0_0_35px_rgba(244,114,182,0.16)]",
 };
 
 function playTone(
@@ -233,7 +233,7 @@ export function GameBoard() {
       <main
         ref={boardRef}
         tabIndex={-1}
-        className={`${panelClassName} flex min-h-[220px] items-center justify-center px-6 py-8 text-lg font-medium`}
+        className={`${panelClassName} flex min-h-[220px] items-center justify-center px-6 py-8 text-lg font-medium outline-none focus:outline-none`}
       >
         Loading game…
       </main>
@@ -245,10 +245,10 @@ export function GameBoard() {
       <main
         ref={boardRef}
         tabIndex={-1}
-        className={`${panelClassName} flex min-h-[320px] flex-col items-center justify-center gap-3 px-6 py-10 text-center`}
+        className={`${panelClassName} flex min-h-[320px] flex-col items-center justify-center gap-3 px-6 py-10 text-center outline-none focus:outline-none`}
       >
-        <h2 className="text-2xl font-bold text-white">No round loaded</h2>
-        <p className="max-w-xl text-pink-100/70">
+        <h2 className="text-2xl font-bold text-slate-900">No round loaded</h2>
+        <p className="max-w-xl text-slate-700">
           Open the admin page, save a round, then bring players back here to
           start buzzing.
         </p>
@@ -271,14 +271,14 @@ export function GameBoard() {
     <main
       ref={boardRef}
       tabIndex={-1}
-      className={`grid h-full min-h-0 flex-1 grid-rows-[auto_minmax(0,1fr)_auto] gap-3 overflow-hidden ${feedbackClasses[feedbackClass] ?? ""}`}
+      className={`grid h-full min-h-0 flex-1 grid-rows-[auto_minmax(0,1fr)_auto] gap-3 overflow-hidden outline-none focus:outline-none ${feedbackClasses[feedbackClass] ?? ""}`}
     >
       {buzzToast ? (
-        <section className="pointer-events-none fixed left-1/2 top-6 z-20 w-[min(92vw,34rem)] -translate-x-1/2 rounded-[24px] border border-amber-300/30 bg-[linear-gradient(180deg,rgba(255,196,87,0.24),rgba(64,24,3,0.96))] px-5 py-4 text-center shadow-[0_0_0_1px_rgba(255,214,102,0.16),0_24px_60px_rgba(0,0,0,0.42),0_0_42px_rgba(255,184,77,0.16)] backdrop-blur">
-          <p className="text-[0.72rem] uppercase tracking-[0.28em] text-amber-100/75">
+        <section className="pointer-events-none fixed left-1/2 top-6 z-20 w-[min(92vw,34rem)] -translate-x-1/2 rounded-[24px] border-2 border-black/80 bg-[#fdf1de] px-5 py-4 text-center shadow-[0_12px_30px_rgba(0,0,0,0.2)]">
+          <p className="text-[0.72rem] uppercase tracking-[0.28em] text-slate-700">
             Buzzer Alert
           </p>
-          <strong className="mt-1 block text-2xl font-extrabold text-white sm:text-3xl">
+          <strong className="mt-1 block text-2xl font-extrabold text-slate-900 sm:text-3xl">
             {buzzToast}
           </strong>
         </section>
@@ -286,7 +286,7 @@ export function GameBoard() {
 
       <section className="grid gap-3 xl:grid-cols-[minmax(0,2.25fr)_190px]">
         <section className={`${panelClassName} px-4 py-4 sm:px-5`}>
-          <p className="max-w-6xl text-3xl font-extrabold leading-[1.08] text-pink-50 sm:text-4xl xl:text-[3.3rem]">
+          <p className="max-w-6xl text-3xl font-extrabold leading-[1.08] text-slate-900 sm:text-4xl xl:text-[3.3rem]">
             {round.prompt}
           </p>
         </section>
@@ -295,26 +295,26 @@ export function GameBoard() {
           <article
             className={`${panelClassName} ${softPanelClassName} px-3 py-2.5`}
           >
-            <p className="text-[0.7rem] uppercase tracking-[0.16em] text-pink-200/70 sm:text-xs">
+            <p className="text-[0.7rem] uppercase tracking-[0.16em] text-slate-600 sm:text-xs">
               {game.playerOneName}
             </p>
-            <strong className="mt-1 block text-3xl font-extrabold leading-none text-white sm:text-4xl">
+            <strong className="mt-1 block text-3xl font-extrabold leading-none text-slate-900 sm:text-4xl">
               {game.scores.player1}
             </strong>
-            <span className="mt-1.5 inline-flex rounded-full border border-pink-300/25 bg-pink-500/10 px-2.5 py-0.5 text-[0.68rem] text-pink-100 sm:text-xs">
+            <span className="mt-1.5 inline-flex rounded-full border border-black/25 bg-pink-200 px-2.5 py-0.5 text-[0.68rem] text-slate-900 sm:text-xs">
               Key {game.playerOneKey}
             </span>
           </article>
           <article
             className={`${panelClassName} ${softPanelClassName} px-3 py-2.5`}
           >
-            <p className="text-[0.7rem] uppercase tracking-[0.16em] text-pink-200/70 sm:text-xs">
+            <p className="text-[0.7rem] uppercase tracking-[0.16em] text-slate-600 sm:text-xs">
               {game.playerTwoName}
             </p>
-            <strong className="mt-1 block text-3xl font-extrabold leading-none text-white sm:text-4xl">
+            <strong className="mt-1 block text-3xl font-extrabold leading-none text-slate-900 sm:text-4xl">
               {game.scores.player2}
             </strong>
-            <span className="mt-1.5 inline-flex rounded-full border border-pink-300/25 bg-pink-500/10 px-2.5 py-0.5 text-[0.68rem] text-pink-100 sm:text-xs">
+            <span className="mt-1.5 inline-flex rounded-full border border-black/25 bg-sky-200 px-2.5 py-0.5 text-[0.68rem] text-slate-900 sm:text-xs">
               Key {game.playerTwoKey}
             </span>
           </article>
@@ -325,30 +325,28 @@ export function GameBoard() {
         {round.answers.map((answer: any, index: number) => (
           <article
             className={[
-              "relative flex min-h-[210px] flex-col justify-between overflow-hidden rounded-[24px] border px-4 py-4 transition xl:min-h-[260px] xl:px-5 xl:py-5",
-              answer.revealed
-                ? "border-pink-300/25 bg-[linear-gradient(180deg,rgba(255,53,146,0.26),rgba(18,4,13,0.96))] text-white"
-                : "border-white/8 bg-[linear-gradient(180deg,rgba(22,8,18,0.94),rgba(8,3,7,0.98))] text-pink-100/82",
+              "relative flex min-h-[170px] flex-col justify-between overflow-hidden rounded-[24px] border-4 border-black px-4 py-4 text-black transition xl:min-h-[200px] xl:px-5 xl:py-5",
+              index % 2 === 0 ? "bg-pink-200" : "bg-sky-200",
               answer.id === highlightAnswerId
-                ? "scale-[1.02] shadow-[0_0_0_1px_rgba(255,123,192,0.18),0_0_40px_rgba(255,84,169,0.18)]"
+                ? "scale-[1.02] shadow-[0_0_0_1px_rgba(0,0,0,0.2),0_0_30px_rgba(0,0,0,0.22)]"
                 : "",
             ].join(" ")}
             key={answer.id}
           >
-            <span className="text-[0.82rem] font-semibold uppercase tracking-[0.22em] text-pink-200/60 sm:text-[0.9rem]">
+            <span className="text-[0.82rem] font-semibold uppercase tracking-[0.22em] text-black/70 sm:text-[0.9rem]">
               Answer {index + 1}
             </span>
             {answer.revealed ? (
               <div className="mt-4 flex h-full items-end justify-between gap-3">
-                <strong className="text-2xl font-bold leading-tight sm:text-[2rem] xl:text-[2.4rem]">
+                <strong className="text-[1.35rem] font-bold leading-tight sm:text-[1.55rem] xl:text-[1.85rem]">
                   {answer.text}
                 </strong>
-                <span className="rounded-full border border-white/10 bg-black/30 px-3 py-1.5 text-xl font-bold text-pink-50 xl:text-2xl">
+                <span className="rounded-full border-2 border-black bg-white px-3 py-1.5 text-xl font-bold text-black xl:text-2xl">
                   {answer.points}
                 </span>
               </div>
             ) : (
-              <strong className="mt-6 text-center text-7xl font-black text-pink-100/80 sm:text-8xl">
+              <strong className="mt-6 text-center text-7xl font-black text-black/75 sm:text-8xl">
                 ?
               </strong>
             )}
@@ -369,8 +367,8 @@ export function GameBoard() {
                   className={[
                     "flex h-10 w-10 items-center justify-center rounded-2xl border text-base font-bold transition sm:h-12 sm:w-12 sm:text-lg",
                     index < round.strikes.player1
-                      ? "border-pink-300/40 bg-pink-500/20 text-pink-100"
-                      : "border-white/10 bg-white/5 text-pink-100/35",
+                      ? "border-black/50 bg-pink-200 text-slate-900"
+                      : "border-black/20 bg-white/70 text-slate-500",
                   ].join(" ")}
                   key={index}
                 >
@@ -380,11 +378,11 @@ export function GameBoard() {
             </div>
             <div className="flex flex-wrap gap-2">
               {playerOneGuesses.length === 0 ? (
-                <span className="text-sm text-pink-100/60">No misses yet.</span>
+                <span className="text-sm text-slate-600">No misses yet.</span>
               ) : (
                 playerOneGuesses.map((guess: any) => (
                   <span
-                    className="rounded-full border border-pink-300/20 bg-pink-500/10 px-3 py-1 text-xs text-pink-50 sm:text-sm"
+                    className="rounded-full border border-black/20 bg-pink-100 px-3 py-1 text-xs text-slate-900 sm:text-sm"
                     key={guess.id}
                   >
                     {guess.guess}
@@ -406,8 +404,8 @@ export function GameBoard() {
                   className={[
                     "flex h-10 w-10 items-center justify-center rounded-2xl border text-base font-bold transition sm:h-12 sm:w-12 sm:text-lg",
                     index < round.strikes.player2
-                      ? "border-pink-300/40 bg-pink-500/20 text-pink-100"
-                      : "border-white/10 bg-white/5 text-pink-100/35",
+                      ? "border-black/50 bg-sky-200 text-slate-900"
+                      : "border-black/20 bg-white/70 text-slate-500",
                   ].join(" ")}
                   key={index}
                 >
@@ -417,11 +415,11 @@ export function GameBoard() {
             </div>
             <div className="flex flex-wrap gap-2">
               {playerTwoGuesses.length === 0 ? (
-                <span className="text-sm text-pink-100/60">No misses yet.</span>
+                <span className="text-sm text-slate-600">No misses yet.</span>
               ) : (
                 playerTwoGuesses.map((guess: any) => (
                   <span
-                    className="rounded-full border border-pink-300/20 bg-pink-500/10 px-3 py-1 text-xs text-pink-50 sm:text-sm"
+                    className="rounded-full border border-black/20 bg-sky-100 px-3 py-1 text-xs text-slate-900 sm:text-sm"
                     key={guess.id}
                   >
                     {guess.guess}
@@ -437,8 +435,8 @@ export function GameBoard() {
     <main
       className={`${panelClassName} flex min-h-[320px] flex-col items-center justify-center gap-3 px-6 py-10 text-center`}
     >
-      <h2 className="text-2xl font-bold text-white">No active round</h2>
-      <p className="max-w-xl text-pink-100/70">
+      <h2 className="text-2xl font-bold text-slate-900">No active round</h2>
+      <p className="max-w-xl text-slate-700">
         Set up rounds in admin and send one live to start the game.
       </p>
     </main>
