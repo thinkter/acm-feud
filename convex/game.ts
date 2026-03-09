@@ -27,6 +27,204 @@ function currentRound(game: any) {
   return game.rounds[game.currentRoundIndex] ?? null;
 }
 
+const womenInStemSeedRounds = [
+  {
+    id: "round-1",
+    title: "Women In STEM Legacy",
+    prompt: "Name a famous woman in STEM whose work changed the world.",
+    answers: [
+      { id: "round-1-answer-1", text: "Marie Curie", points: 30 },
+      { id: "round-1-answer-2", text: "Ada Lovelace", points: 25 },
+      { id: "round-1-answer-3", text: "Katherine Johnson", points: 20 },
+      { id: "round-1-answer-4", text: "Rosalind Franklin", points: 15 },
+      { id: "round-1-answer-5", text: "Grace Hopper", points: 10 },
+      { id: "round-1-answer-6", text: "Jane Goodall", points: 5 },
+    ],
+  },
+  {
+    id: "round-2",
+    title: "Influenced Technology",
+    prompt: "Name a technology today that was influenced by a woman innovator.",
+    answers: [
+      { id: "round-2-answer-1", text: "Programming / Coding Languages", points: 30 },
+      { id: "round-2-answer-2", text: "Wi-Fi / Wireless Communication", points: 25 },
+      { id: "round-2-answer-3", text: "GPS Navigation", points: 20 },
+      { id: "round-2-answer-4", text: "Computer Software", points: 15 },
+      { id: "round-2-answer-5", text: "Space Exploration Tech", points: 10 },
+      { id: "round-2-answer-6", text: "Medical Imaging / X-Ray", points: 5 },
+    ],
+  },
+  {
+    id: "round-3",
+    title: "Core Skills",
+    prompt: "Name a skill that every great programmer or scientist needs.",
+    answers: [
+      { id: "round-3-answer-1", text: "Problem Solving", points: 30 },
+      { id: "round-3-answer-2", text: "Critical Thinking", points: 25 },
+      { id: "round-3-answer-3", text: "Attention to Detail", points: 20 },
+      { id: "round-3-answer-4", text: "Creativity", points: 15 },
+      { id: "round-3-answer-5", text: "Communication", points: 10 },
+      { id: "round-3-answer-6", text: "Patience / Persistence", points: 5 },
+    ],
+  },
+  {
+    id: "round-4",
+    title: "Desk Essentials",
+    prompt: "Name something you would likely find on the desk of a woman in tech.",
+    answers: [
+      { id: "round-4-answer-1", text: "Laptop / Computer", points: 30 },
+      { id: "round-4-answer-2", text: "Coffee / Energy Drink", points: 25 },
+      { id: "round-4-answer-3", text: "Sticky Notes", points: 20 },
+      { id: "round-4-answer-4", text: "Multiple Monitors", points: 15 },
+      { id: "round-4-answer-5", text: "Coding Books", points: 10 },
+      { id: "round-4-answer-6", text: "Plant / Personal Decor", points: 5 },
+    ],
+  },
+  {
+    id: "round-5",
+    title: "STEM Fields Today",
+    prompt: "Name a field in STEM where women are making groundbreaking contributions today.",
+    answers: [
+      { id: "round-5-answer-1", text: "Medicine / Healthcare", points: 30 },
+      { id: "round-5-answer-2", text: "Artificial Intelligence", points: 25 },
+      { id: "round-5-answer-3", text: "Space Science / Astronomy", points: 20 },
+      { id: "round-5-answer-4", text: "Environmental Science", points: 15 },
+      { id: "round-5-answer-5", text: "Genetics / Biotech", points: 10 },
+      { id: "round-5-answer-6", text: "Robotics / Engineering", points: 5 },
+    ],
+  },
+  {
+    id: "round-6",
+    title: "Debug Habits",
+    prompt: "Name something students do when they're stuck on a coding problem.",
+    answers: [
+      { id: "round-6-answer-1", text: "Google It", points: 30 },
+      { id: "round-6-answer-2", text: "Ask a Friend / Classmate", points: 25 },
+      { id: "round-6-answer-3", text: "Take a Break / Walk Away", points: 20 },
+      { id: "round-6-answer-4", text: "Watch a YouTube Tutorial", points: 15 },
+      { id: "round-6-answer-5", text: "Ask the Professor", points: 10 },
+      { id: "round-6-answer-6", text: "Check Stack Overflow", points: 5 },
+    ],
+  },
+  {
+    id: "round-7",
+    title: "Developer Toolkit",
+    prompt: "Name a tech tool or platform every developer probably uses.",
+    answers: [
+      { id: "round-7-answer-1", text: "GitHub", points: 30 },
+      { id: "round-7-answer-2", text: "VS Code / Code Editor", points: 25 },
+      { id: "round-7-answer-3", text: "Google / Search Engine", points: 20 },
+      { id: "round-7-answer-4", text: "Stack Overflow", points: 15 },
+      { id: "round-7-answer-5", text: "Slack / Communication App", points: 10 },
+      { id: "round-7-answer-6", text: "Terminal / Command Line", points: 5 },
+    ],
+  },
+  {
+    id: "round-8",
+    title: "World Problems",
+    prompt: "Name a problem in the world today that technology is trying to solve.",
+    answers: [
+      { id: "round-8-answer-1", text: "Climate Change / Environment", points: 30 },
+      { id: "round-8-answer-2", text: "Cancer / Disease", points: 25 },
+      { id: "round-8-answer-3", text: "Hunger / Food Shortage", points: 20 },
+      { id: "round-8-answer-4", text: "Mental Health", points: 15 },
+      { id: "round-8-answer-5", text: "Clean Water Access", points: 10 },
+      { id: "round-8-answer-6", text: "Education Inequality", points: 5 },
+    ],
+  },
+  {
+    id: "round-9",
+    title: "Coder Habits",
+    prompt: "Name a habit of people who spend a lot of time coding.",
+    answers: [
+      { id: "round-9-answer-1", text: "Staying Up Late / All-Nighters", points: 30 },
+      { id: "round-9-answer-2", text: "Drinking a Lot of Coffee", points: 25 },
+      { id: "round-9-answer-3", text: "Sitting for Long Periods", points: 20 },
+      { id: "round-9-answer-4", text: "Wearing Headphones", points: 15 },
+      { id: "round-9-answer-5", text: "Talking to Themselves / Debugging Out Loud", points: 10 },
+      { id: "round-9-answer-6", text: "Skipping Meals", points: 5 },
+    ],
+  },
+  {
+    id: "round-10",
+    title: "Why Tech Careers",
+    prompt: "Name a reason someone might want to pursue a career in tech.",
+    answers: [
+      { id: "round-10-answer-1", text: "High Salary / Good Pay", points: 30 },
+      { id: "round-10-answer-2", text: "Job Security / High Demand", points: 25 },
+      { id: "round-10-answer-3", text: "Make a Difference / Change the World", points: 20 },
+      { id: "round-10-answer-4", text: "Love of Problem Solving", points: 15 },
+      { id: "round-10-answer-5", text: "Remote Work / Flexibility", points: 10 },
+      { id: "round-10-answer-6", text: "Creativity / Innovation", points: 5 },
+    ],
+  },
+  {
+    id: "round-11",
+    title: "First Languages",
+    prompt: "Name a programming language most beginners start with.",
+    answers: [
+      { id: "round-11-answer-1", text: "Python", points: 30 },
+      { id: "round-11-answer-2", text: "JavaScript", points: 25 },
+      { id: "round-11-answer-3", text: "Java", points: 20 },
+      { id: "round-11-answer-4", text: "Scratch / Block Coding", points: 15 },
+      { id: "round-11-answer-5", text: "HTML / CSS", points: 10 },
+      { id: "round-11-answer-6", text: "C++", points: 5 },
+    ],
+  },
+  {
+    id: "round-12",
+    title: "Famous Women In STEM",
+    prompt: "Name a famous woman scientist or engineer from a movie, show, or real life.",
+    answers: [
+      { id: "round-12-answer-1", text: "Marie Curie", points: 30 },
+      { id: "round-12-answer-2", text: "Katherine Johnson (Hidden Figures)", points: 25 },
+      { id: "round-12-answer-3", text: "Ellie Sattler (Jurassic Park)", points: 20 },
+      { id: "round-12-answer-4", text: "Grace Hopper", points: 15 },
+      { id: "round-12-answer-5", text: "Abby Sciuto (NCIS)", points: 10 },
+      { id: "round-12-answer-6", text: "Samantha Carter (Stargate)", points: 5 },
+    ],
+  },
+  {
+    id: "round-13",
+    title: "Hackathon Moments",
+    prompt: "Name something that might happen at a hackathon.",
+    answers: [
+      { id: "round-13-answer-1", text: "Coding All Night", points: 30 },
+      { id: "round-13-answer-2", text: "Team Pitches / Presentations", points: 25 },
+      { id: "round-13-answer-3", text: "Free Pizza / Food", points: 20 },
+      { id: "round-13-answer-4", text: "Win Prizes / Awards", points: 15 },
+      { id: "round-13-answer-5", text: "Networking / Meeting People", points: 10 },
+      { id: "round-13-answer-6", text: "App / Product Demo", points: 5 },
+    ],
+  },
+  {
+    id: "round-14",
+    title: "Tech Stereotypes",
+    prompt: "Name a stereotype about people who work in tech.",
+    answers: [
+      { id: "round-14-answer-1", text: "Anti-Social / Nerdy", points: 30 },
+      { id: "round-14-answer-2", text: "Wears Hoodies All the Time", points: 25 },
+      { id: "round-14-answer-3", text: "Obsessed with Gadgets", points: 20 },
+      { id: "round-14-answer-4", text: "Bad at Sports / Unfit", points: 15 },
+      { id: "round-14-answer-5", text: "Only Eats Junk Food", points: 10 },
+      { id: "round-14-answer-6", text: "Sleeps at Their Desk", points: 5 },
+    ],
+  },
+  {
+    id: "round-15",
+    title: "Future Tech",
+    prompt: "Name a technology you think will change the future the most.",
+    answers: [
+      { id: "round-15-answer-1", text: "Artificial Intelligence (AI)", points: 30 },
+      { id: "round-15-answer-2", text: "Self-Driving Cars", points: 25 },
+      { id: "round-15-answer-3", text: "Renewable / Clean Energy", points: 20 },
+      { id: "round-15-answer-4", text: "Gene Editing / CRISPR", points: 15 },
+      { id: "round-15-answer-5", text: "Space Travel / Colonization", points: 10 },
+      { id: "round-15-answer-6", text: "Quantum Computing", points: 5 },
+    ],
+  },
+] as const;
+
 function playerName(game: any, player: Player) {
   return player === "player1" ? game.playerOneName : game.playerTwoName;
 }
@@ -468,5 +666,59 @@ export const migrateLegacyGame = mutation({
     });
 
     return game._id;
+  },
+});
+
+export const seedWomenInStem = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const existingGames = await ctx.db.query("games").collect();
+    const primaryGame = existingGames[0] ?? null;
+
+    if (existingGames.length > 1) {
+      await Promise.all(existingGames.slice(1).map((game) => ctx.db.delete(game._id)));
+    }
+
+    const nextRounds = womenInStemSeedRounds.map((round) => ({
+      id: round.id,
+      title: round.title,
+      prompt: round.prompt,
+      answers: round.answers.map((answer) => ({
+        id: answer.id,
+        text: answer.text,
+        points: answer.points,
+        revealed: false,
+      })),
+      wrongGuesses: [],
+      strikes: {
+        player1: 0,
+        player2: 0,
+      },
+    }));
+
+    const nextState = {
+      playerOneName: "Team Rose",
+      playerTwoName: "Team Blossom",
+      playerOneKey: "A",
+      playerTwoKey: "L",
+      currentRoundIndex: 0,
+      rounds: nextRounds,
+      scores: {
+        player1: 0,
+        player2: 0,
+      },
+      buzz: {
+        player: null,
+        pressedAt: null,
+      },
+      lastEvent: createEvent("round", "Match Seeded", nextRounds[0]?.title ?? "No rounds configured"),
+    };
+
+    if (primaryGame) {
+      await ctx.db.patch(primaryGame._id, nextState);
+      return primaryGame._id;
+    }
+
+    return await ctx.db.insert("games", nextState);
   },
 });

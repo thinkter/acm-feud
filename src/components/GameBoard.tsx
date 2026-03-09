@@ -62,10 +62,38 @@ function playEventSound(context: AudioContext, type: string) {
   setTimeout(() => playTone(context, 554.37, 0.1, 0.05, "sine"), 90);
 }
 
+function isTriggerActive(
+  gamepad: Gamepad,
+  buttonIndex: number,
+  axisIndex: number | null,
+  threshold: number,
+) {
+  const button = gamepad.buttons[buttonIndex];
+  if (button) {
+    if (button.pressed) {
+      return true;
+    }
+
+    if (typeof button.value === "number" && button.value >= threshold) {
+      return true;
+    }
+  }
+
+  if (axisIndex !== null) {
+    const axisValue = gamepad.axes[axisIndex];
+    if (typeof axisValue === "number" && axisValue >= threshold) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 export function GameBoard() {
   const game = useQuery(api.game.current, {}) as any;
   const registerBuzz = useMutation(api.game.registerBuzz);
   const pressedKeys = useRef(new Set<string>());
+  const pressedGamepadButtons = useRef(new Set<string>());
   const boardRef = useRef<HTMLElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const previousEventId = useRef<string | null>(null);
@@ -96,6 +124,15 @@ export function GameBoard() {
       return;
     }
 
+    const getBuzzTimestamp = () =>
+      typeof window !== "undefined" && window.performance
+        ? window.performance.timeOrigin + window.performance.now()
+        : Date.now();
+
+    const submitBuzz = (player: "player1" | "player2") => {
+      void registerBuzz({ player, pressedAt: getBuzzTimestamp() });
+    };
+
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
         boardRef.current?.focus();
@@ -115,11 +152,11 @@ export function GameBoard() {
       pressedKeys.current.add(key);
 
       if (keyMatches(key, game.playerOneKey)) {
-        void registerBuzz({ player: "player1", pressedAt: Date.now() });
+        submitBuzz("player1");
       }
 
       if (keyMatches(key, game.playerTwoKey)) {
-        void registerBuzz({ player: "player2", pressedAt: Date.now() });
+        submitBuzz("player2");
       }
     };
 
@@ -127,14 +164,88 @@ export function GameBoard() {
       pressedKeys.current.delete(event.key.toUpperCase());
     };
 
+    let pollIntervalId: number | null = null;
+    const triggerThreshold = 0.5;
+    const triggerMappings = [
+      { buttonIndex: 7, axisIndex: 5, player: "player1" as const },
+      { buttonIndex: 6, axisIndex: 4, player: "player2" as const },
+    ];
+
+    const readGamepads = () => {
+      const gamepads = navigator.getGamepads?.() ?? [];
+      const nextPressedButtons = new Set<string>();
+
+      for (const gamepad of gamepads) {
+        if (!gamepad) {
+          continue;
+        }
+
+        for (const mapping of triggerMappings) {
+          const isPressed = isTriggerActive(
+            gamepad,
+            mapping.buttonIndex,
+            mapping.axisIndex,
+            triggerThreshold,
+          );
+          const pressedId = `${gamepad.index}:${mapping.buttonIndex}`;
+
+          if (isPressed) {
+            nextPressedButtons.add(pressedId);
+            if (!pressedGamepadButtons.current.has(pressedId)) {
+              submitBuzz(mapping.player);
+            }
+          }
+        }
+      }
+
+      pressedGamepadButtons.current = nextPressedButtons;
+    };
+
+    const startPollingGamepads = () => {
+      if (pollIntervalId !== null) {
+        return;
+      }
+
+      readGamepads();
+      pollIntervalId = window.setInterval(readGamepads, 16);
+    };
+
+    const stopPollingGamepads = () => {
+      if (pollIntervalId === null) {
+        return;
+      }
+
+      window.clearInterval(pollIntervalId);
+      pollIntervalId = null;
+    };
+
+    const handleGamepadConnected = () => {
+      boardRef.current?.focus();
+      startPollingGamepads();
+    };
+
+    const handleWindowBlur = () => {
+      pressedKeys.current.clear();
+      pressedGamepadButtons.current.clear();
+    };
+
     window.addEventListener("keydown", handleKeyDown, true);
     window.addEventListener("keyup", handleKeyUp, true);
     document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("gamepadconnected", handleGamepadConnected);
+    window.addEventListener("focus", startPollingGamepads);
+    window.addEventListener("blur", handleWindowBlur);
+    startPollingGamepads();
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown, true);
       window.removeEventListener("keyup", handleKeyUp, true);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("gamepadconnected", handleGamepadConnected);
+      window.removeEventListener("focus", startPollingGamepads);
+      window.removeEventListener("blur", handleWindowBlur);
+      stopPollingGamepads();
+      pressedGamepadButtons.current.clear();
     };
   }, [game, registerBuzz]);
 
@@ -233,7 +344,7 @@ export function GameBoard() {
       <main
         ref={boardRef}
         tabIndex={-1}
-        className={`${panelClassName} flex min-h-[220px] items-center justify-center px-6 py-8 text-lg font-medium`}
+        className={`${panelClassName} flex min-h-[220px] items-center justify-center px-6 py-8 text-lg font-medium outline-none focus:outline-none`}
       >
         Loading game…
       </main>
@@ -245,7 +356,7 @@ export function GameBoard() {
       <main
         ref={boardRef}
         tabIndex={-1}
-        className={`${panelClassName} flex min-h-[320px] flex-col items-center justify-center gap-3 px-6 py-10 text-center`}
+        className={`${panelClassName} flex min-h-[320px] flex-col items-center justify-center gap-3 px-6 py-10 text-center outline-none focus:outline-none`}
       >
         <h2 className="text-2xl font-bold text-white">No round loaded</h2>
         <p className="max-w-xl text-pink-100/70">
@@ -271,7 +382,7 @@ export function GameBoard() {
     <main
       ref={boardRef}
       tabIndex={-1}
-      className={`grid h-full min-h-0 flex-1 grid-rows-[auto_minmax(0,1fr)_auto] gap-3 overflow-hidden ${feedbackClasses[feedbackClass] ?? ""}`}
+      className={`grid h-full min-h-0 flex-1 grid-rows-[auto_minmax(0,1fr)_auto] gap-3 overflow-hidden outline-none focus:outline-none ${feedbackClasses[feedbackClass] ?? ""}`}
     >
       {buzzToast ? (
         <section className="pointer-events-none fixed left-1/2 top-6 z-20 w-[min(92vw,34rem)] -translate-x-1/2 rounded-[24px] border border-amber-300/30 bg-[linear-gradient(180deg,rgba(255,196,87,0.24),rgba(64,24,3,0.96))] px-5 py-4 text-center shadow-[0_0_0_1px_rgba(255,214,102,0.16),0_24px_60px_rgba(0,0,0,0.42),0_0_42px_rgba(255,184,77,0.16)] backdrop-blur">
@@ -302,7 +413,7 @@ export function GameBoard() {
               {game.scores.player1}
             </strong>
             <span className="mt-1.5 inline-flex rounded-full border border-pink-300/25 bg-pink-500/10 px-2.5 py-0.5 text-[0.68rem] text-pink-100 sm:text-xs">
-              Key {game.playerOneKey}
+              Key {game.playerOneKey} / R2
             </span>
           </article>
           <article
@@ -315,7 +426,7 @@ export function GameBoard() {
               {game.scores.player2}
             </strong>
             <span className="mt-1.5 inline-flex rounded-full border border-pink-300/25 bg-pink-500/10 px-2.5 py-0.5 text-[0.68rem] text-pink-100 sm:text-xs">
-              Key {game.playerTwoKey}
+              Key {game.playerTwoKey} / L2
             </span>
           </article>
         </section>
@@ -435,7 +546,7 @@ export function GameBoard() {
     </main>
   ) : (
     <main
-      className={`${panelClassName} flex min-h-[320px] flex-col items-center justify-center gap-3 px-6 py-10 text-center`}
+      className={`${panelClassName} flex min-h-[320px] flex-col items-center justify-center gap-3 px-6 py-10 text-center outline-none focus:outline-none`}
     >
       <h2 className="text-2xl font-bold text-white">No active round</h2>
       <p className="max-w-xl text-pink-100/70">
