@@ -11,20 +11,20 @@ import {
 import { normalizeKeyLabel } from "../lib/formatting";
 
 const panelClassName =
-  "rounded-[28px] border border-pink-200/10 bg-[linear-gradient(180deg,rgba(30,5,21,0.96),rgba(14,2,11,0.96))] p-5 shadow-[0_24px_60px_rgba(0,0,0,0.42)] backdrop-blur";
+  "rounded-[24px] border-2 border-black/80 bg-[#f6e8d5] p-5 shadow-[0_10px_24px_rgba(0,0,0,0.15)]";
 const insetCardClassName =
-  "rounded-[22px] border border-pink-200/10 bg-white/5 p-4";
+  "rounded-[20px] border border-black/20 bg-white/70 p-4";
 const eyebrowClassName =
-  "text-[0.72rem] uppercase tracking-[0.28em] text-pink-200/65";
+  "text-[0.72rem] uppercase tracking-[0.28em] text-slate-600";
 const fieldClassName =
-  "w-full rounded-2xl border border-pink-200/10 bg-black/35 px-4 py-3 text-white outline-none transition placeholder:text-pink-100/35 focus:border-pink-300/45 focus:bg-black/45";
+  "w-full rounded-2xl border border-black/20 bg-white px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-500 focus:border-pink-300";
 const stackedFieldClassName = `mt-2 ${fieldClassName}`;
 const secondaryButtonClassName =
-  "rounded-full border border-pink-200/15 bg-white/5 px-4 py-2.5 text-sm font-semibold text-pink-50 transition hover:-translate-y-0.5 hover:border-pink-300/35 hover:bg-pink-500/12";
+  "rounded-full border border-black/20 bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 transition hover:-translate-y-0.5 hover:border-pink-300 hover:bg-pink-100";
 const dangerButtonClassName =
-  "rounded-full border border-rose-300/20 bg-rose-500/12 px-4 py-2.5 text-sm font-semibold text-rose-100 transition hover:-translate-y-0.5 hover:border-rose-300/35 hover:bg-rose-500/18";
+  "rounded-full border border-red-300 bg-red-100 px-4 py-2.5 text-sm font-semibold text-red-900 transition hover:-translate-y-0.5 hover:bg-red-200";
 const primaryButtonClassName =
-  "rounded-full border border-pink-300/35 bg-pink-500 px-5 py-3 text-sm font-semibold text-white shadow-[0_12px_30px_rgba(255,62,151,0.28)] transition hover:-translate-y-0.5 hover:bg-pink-400";
+  "rounded-full border border-black/30 bg-pink-300 px-5 py-3 text-sm font-semibold text-slate-900 shadow-[0_8px_20px_rgba(0,0,0,0.16)] transition hover:-translate-y-0.5 hover:bg-pink-200";
 
 function toFormState(game: any): EditableMatch {
   if (!game) {
@@ -166,12 +166,12 @@ export function AdminDashboard() {
   const liveRound = game?.round;
 
   return (
-    <main className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_400px]">
-      <section className={`${panelClassName} grid min-w-0 gap-4`}>
+    <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_400px]">
+      <div className={`${panelClassName} grid min-w-0 gap-4`}>
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className={eyebrowClassName}>Match Setup</p>
-            <h2 className="text-2xl font-bold text-white">
+            <h2 className="text-2xl font-bold text-slate-900">
               Queue every round in advance
             </h2>
           </div>
@@ -189,7 +189,7 @@ export function AdminDashboard() {
 
         <form className="grid gap-4" onSubmit={handleSubmit}>
           <div className="grid gap-4 md:grid-cols-2">
-            <label className="text-sm font-medium text-pink-50">
+            <label className="text-sm font-medium text-slate-800">
               Player one name
               <input
                 className={stackedFieldClassName}
@@ -202,7 +202,7 @@ export function AdminDashboard() {
                 value={form.playerOneName}
               />
             </label>
-            <label className="text-sm font-medium text-pink-50">
+            <label className="text-sm font-medium text-slate-800">
               Player one key
               <input
                 className={stackedFieldClassName}
@@ -216,7 +216,7 @@ export function AdminDashboard() {
                 value={form.playerOneKey}
               />
             </label>
-            <label className="text-sm font-medium text-pink-50">
+            <label className="text-sm font-medium text-slate-800">
               Player two name
               <input
                 className={stackedFieldClassName}
@@ -229,7 +229,7 @@ export function AdminDashboard() {
                 value={form.playerTwoName}
               />
             </label>
-            <label className="text-sm font-medium text-pink-50">
+            <label className="text-sm font-medium text-slate-800">
               Player two key
               <input
                 className={stackedFieldClassName}
@@ -247,7 +247,7 @@ export function AdminDashboard() {
 
           <div className="grid gap-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <h3 className="text-xl font-semibold text-white">Round Queue</h3>
+              <h3 className="text-xl font-semibold text-slate-900">Round Queue</h3>
               <button
                 className={secondaryButtonClassName}
                 onClick={() =>
@@ -274,8 +274,8 @@ export function AdminDashboard() {
                   className={[
                     "flex min-w-[150px] shrink-0 items-center gap-3 rounded-[22px] border px-4 py-3 text-left transition",
                     round.id === selectedRound?.id
-                      ? "border-pink-300/35 bg-pink-500/16 text-white shadow-[0_0_35px_rgba(255,72,158,0.18)]"
-                      : "border-white/10 bg-white/5 text-pink-50 hover:border-pink-300/25 hover:bg-pink-500/10",
+                      ? "border-black/35 bg-pink-200 text-slate-900 shadow-[0_8px_18px_rgba(0,0,0,0.12)]"
+                      : "border-black/20 bg-white text-slate-800 hover:border-sky-300 hover:bg-sky-100",
                   ].join(" ")}
                   key={round.id}
                   onClick={() => setSelectedRoundId(round.id)}
@@ -292,7 +292,7 @@ export function AdminDashboard() {
 
           {selectedRound ? (
             <div className={`${insetCardClassName} grid gap-4`}>
-              <label className="text-sm font-medium text-pink-50">
+              <label className="text-sm font-medium text-slate-800">
                 Round title
                 <input
                   className={stackedFieldClassName}
@@ -305,7 +305,7 @@ export function AdminDashboard() {
                   value={selectedRound.title}
                 />
               </label>
-              <label className="text-sm font-medium text-pink-50">
+              <label className="text-sm font-medium text-slate-800">
                 Prompt
                 <textarea
                   className={`${stackedFieldClassName} min-h-28 resize-y`}
@@ -321,7 +321,7 @@ export function AdminDashboard() {
               </label>
 
               <div className="flex flex-wrap items-center justify-between gap-4">
-                <h3 className="text-xl font-semibold text-white">Answers</h3>
+                <h3 className="text-xl font-semibold text-slate-900">Answers</h3>
                 <div className="flex flex-wrap gap-3">
                   <button
                     className={secondaryButtonClassName}
@@ -364,10 +364,10 @@ export function AdminDashboard() {
               <div className="grid gap-3">
                 {selectedRound.answers.map((answer, index) => (
                   <div
-                    className="grid gap-3 rounded-[20px] border border-pink-200/10 bg-black/25 p-3 md:grid-cols-[56px_minmax(0,1fr)_120px]"
+                    className="grid gap-3 rounded-[20px] border border-black/20 bg-white/80 p-3 md:grid-cols-[56px_minmax(0,1fr)_120px]"
                     key={answer.id}
                   >
-                    <span className="flex h-12 items-center justify-center rounded-2xl bg-pink-500/14 text-lg font-bold text-pink-50">
+                    <span className="flex h-12 items-center justify-center rounded-2xl bg-pink-200 text-lg font-bold text-slate-900">
                       {index + 1}
                     </span>
                     <input
@@ -411,7 +411,7 @@ export function AdminDashboard() {
             Save Match
           </button>
         </form>
-      </section>
+      </div>
 
       <section
         className={`${panelClassName} grid w-full gap-4 xl:sticky xl:top-3`}
@@ -419,7 +419,7 @@ export function AdminDashboard() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className={eyebrowClassName}>Live Control</p>
-            <h2 className="text-2xl font-bold text-white">
+            <h2 className="text-2xl font-bold text-slate-900">
               Tap from your phone
             </h2>
           </div>
@@ -434,15 +434,15 @@ export function AdminDashboard() {
 
         <div className={insetCardClassName}>
           <p className={eyebrowClassName}>Current Round</p>
-          <h3 className="mt-3 text-3xl font-bold text-white">
+          <h3 className="mt-3 text-3xl font-bold text-slate-900">
             {game
               ? `${game.currentRoundIndex + 1} / ${game.totalRounds}`
               : "No match"}
           </h3>
-          <strong className="mt-3 block text-lg text-white">
+          <strong className="mt-3 block text-lg text-slate-900">
             {liveRound?.title ?? "No active round"}
           </strong>
-          <p className="mt-2 text-pink-100/70">
+          <p className="mt-2 text-slate-700">
             {liveRound?.prompt ?? "Save a match to begin."}
           </p>
         </div>
@@ -453,8 +453,8 @@ export function AdminDashboard() {
               className={[
                 "flex min-w-[110px] items-center gap-2 rounded-[20px] border px-3 py-2.5 text-left text-sm transition",
                 index === game.currentRoundIndex
-                  ? "border-pink-300/35 bg-pink-500/16 text-white"
-                  : "border-white/10 bg-white/5 text-pink-50 hover:border-pink-300/25 hover:bg-pink-500/10",
+                  ? "border-black/35 bg-sky-200 text-slate-900"
+                  : "border-black/20 bg-white text-slate-800 hover:border-pink-300 hover:bg-pink-100",
               ].join(" ")}
               key={round.id}
               onClick={() => void jumpToRound({ roundIndex: index })}
@@ -469,10 +469,10 @@ export function AdminDashboard() {
         <div
           className={`${insetCardClassName} flex flex-wrap items-center gap-3`}
         >
-          <span className="rounded-full border border-amber-200/20 bg-amber-300/14 px-3 py-1.5 text-sm font-semibold text-amber-100">
+          <span className="rounded-full border border-black/20 bg-pink-100 px-3 py-1.5 text-sm font-semibold text-slate-900">
             {game?.buzz.player ? "Buzz Locked" : "Buzzers Open"}
           </span>
-          <strong className="text-white">
+          <strong className="text-slate-900">
             {game?.buzz.player === "player1"
               ? game.playerOneName
               : game?.buzz.player === "player2"
@@ -485,7 +485,7 @@ export function AdminDashboard() {
           <button
             className={
               activeTeam === "player1"
-                ? `${secondaryButtonClassName} border-pink-300/40 bg-pink-500/18`
+                ? `${secondaryButtonClassName} border-black/35 bg-pink-200`
                 : secondaryButtonClassName
             }
             onClick={() => setSelectedTeam("player1")}
@@ -496,7 +496,7 @@ export function AdminDashboard() {
           <button
             className={
               activeTeam === "player2"
-                ? `${secondaryButtonClassName} border-pink-300/40 bg-pink-500/18`
+                ? `${secondaryButtonClassName} border-black/35 bg-sky-200`
                 : secondaryButtonClassName
             }
             onClick={() => setSelectedTeam("player2")}
@@ -512,8 +512,8 @@ export function AdminDashboard() {
               className={[
                 "flex items-center justify-between gap-3 rounded-[20px] border px-4 py-3 text-left transition",
                 answer.revealed
-                  ? "border-pink-300/25 bg-pink-500/14 text-pink-100/70"
-                  : "border-white/10 bg-white/5 text-white hover:border-pink-300/25 hover:bg-pink-500/10",
+                  ? "border-black/20 bg-pink-100 text-slate-600"
+                  : "border-black/20 bg-white text-slate-900 hover:border-sky-300 hover:bg-sky-100",
               ].join(" ")}
               disabled={answer.revealed}
               key={answer.id}
@@ -579,6 +579,6 @@ export function AdminDashboard() {
           </button>
         </div>
       </section>
-    </main>
+    </div>
   );
 }
