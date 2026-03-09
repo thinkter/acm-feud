@@ -62,10 +62,38 @@ function playEventSound(context: AudioContext, type: string) {
   setTimeout(() => playTone(context, 554.37, 0.1, 0.05, "sine"), 90);
 }
 
+function isTriggerActive(
+  gamepad: Gamepad,
+  buttonIndex: number,
+  axisIndex: number | null,
+  threshold: number,
+) {
+  const button = gamepad.buttons[buttonIndex];
+  if (button) {
+    if (button.pressed) {
+      return true;
+    }
+
+    if (typeof button.value === "number" && button.value >= threshold) {
+      return true;
+    }
+  }
+
+  if (axisIndex !== null) {
+    const axisValue = gamepad.axes[axisIndex];
+    if (typeof axisValue === "number" && axisValue >= threshold) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 export function GameBoard() {
   const game = useQuery(api.game.current, {}) as any;
   const registerBuzz = useMutation(api.game.registerBuzz);
   const pressedKeys = useRef(new Set<string>());
+  const pressedGamepadButtons = useRef(new Set<string>());
   const boardRef = useRef<HTMLElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const previousEventId = useRef<string | null>(null);
@@ -96,6 +124,15 @@ export function GameBoard() {
       return;
     }
 
+    const getBuzzTimestamp = () =>
+      typeof window !== "undefined" && window.performance
+        ? window.performance.timeOrigin + window.performance.now()
+        : Date.now();
+
+    const submitBuzz = (player: "player1" | "player2") => {
+      void registerBuzz({ player, pressedAt: getBuzzTimestamp() });
+    };
+
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
         boardRef.current?.focus();
@@ -115,11 +152,11 @@ export function GameBoard() {
       pressedKeys.current.add(key);
 
       if (keyMatches(key, game.playerOneKey)) {
-        void registerBuzz({ player: "player1", pressedAt: Date.now() });
+        submitBuzz("player1");
       }
 
       if (keyMatches(key, game.playerTwoKey)) {
-        void registerBuzz({ player: "player2", pressedAt: Date.now() });
+        submitBuzz("player2");
       }
     };
 
@@ -127,14 +164,88 @@ export function GameBoard() {
       pressedKeys.current.delete(event.key.toUpperCase());
     };
 
+    let pollIntervalId: number | null = null;
+    const triggerThreshold = 0.5;
+    const triggerMappings = [
+      { buttonIndex: 7, axisIndex: 5, player: "player1" as const },
+      { buttonIndex: 6, axisIndex: 4, player: "player2" as const },
+    ];
+
+    const readGamepads = () => {
+      const gamepads = navigator.getGamepads?.() ?? [];
+      const nextPressedButtons = new Set<string>();
+
+      for (const gamepad of gamepads) {
+        if (!gamepad) {
+          continue;
+        }
+
+        for (const mapping of triggerMappings) {
+          const isPressed = isTriggerActive(
+            gamepad,
+            mapping.buttonIndex,
+            mapping.axisIndex,
+            triggerThreshold,
+          );
+          const pressedId = `${gamepad.index}:${mapping.buttonIndex}`;
+
+          if (isPressed) {
+            nextPressedButtons.add(pressedId);
+            if (!pressedGamepadButtons.current.has(pressedId)) {
+              submitBuzz(mapping.player);
+            }
+          }
+        }
+      }
+
+      pressedGamepadButtons.current = nextPressedButtons;
+    };
+
+    const startPollingGamepads = () => {
+      if (pollIntervalId !== null) {
+        return;
+      }
+
+      readGamepads();
+      pollIntervalId = window.setInterval(readGamepads, 16);
+    };
+
+    const stopPollingGamepads = () => {
+      if (pollIntervalId === null) {
+        return;
+      }
+
+      window.clearInterval(pollIntervalId);
+      pollIntervalId = null;
+    };
+
+    const handleGamepadConnected = () => {
+      boardRef.current?.focus();
+      startPollingGamepads();
+    };
+
+    const handleWindowBlur = () => {
+      pressedKeys.current.clear();
+      pressedGamepadButtons.current.clear();
+    };
+
     window.addEventListener("keydown", handleKeyDown, true);
     window.addEventListener("keyup", handleKeyUp, true);
     document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("gamepadconnected", handleGamepadConnected);
+    window.addEventListener("focus", startPollingGamepads);
+    window.addEventListener("blur", handleWindowBlur);
+    startPollingGamepads();
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown, true);
       window.removeEventListener("keyup", handleKeyUp, true);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("gamepadconnected", handleGamepadConnected);
+      window.removeEventListener("focus", startPollingGamepads);
+      window.removeEventListener("blur", handleWindowBlur);
+      stopPollingGamepads();
+      pressedGamepadButtons.current.clear();
     };
   }, [game, registerBuzz]);
 
@@ -301,8 +412,8 @@ export function GameBoard() {
             <strong className="mt-1 block text-3xl font-extrabold leading-none text-slate-900 sm:text-4xl">
               {game.scores.player1}
             </strong>
-            <span className="mt-1.5 inline-flex rounded-full border border-black/25 bg-pink-200 px-2.5 py-0.5 text-[0.68rem] text-slate-900 sm:text-xs">
-              Key {game.playerOneKey}
+            <span className="mt-1.5 inline-flex rounded-full border border-pink-300/25 bg-pink-500/10 px-2.5 py-0.5 text-[0.68rem] text-pink-100 sm:text-xs">
+              Key {game.playerOneKey} / R2
             </span>
           </article>
           <article
@@ -314,8 +425,8 @@ export function GameBoard() {
             <strong className="mt-1 block text-3xl font-extrabold leading-none text-slate-900 sm:text-4xl">
               {game.scores.player2}
             </strong>
-            <span className="mt-1.5 inline-flex rounded-full border border-black/25 bg-sky-200 px-2.5 py-0.5 text-[0.68rem] text-slate-900 sm:text-xs">
-              Key {game.playerTwoKey}
+            <span className="mt-1.5 inline-flex rounded-full border border-pink-300/25 bg-pink-500/10 px-2.5 py-0.5 text-[0.68rem] text-pink-100 sm:text-xs">
+              Key {game.playerTwoKey} / L2
             </span>
           </article>
         </section>
@@ -433,7 +544,7 @@ export function GameBoard() {
     </main>
   ) : (
     <main
-      className={`${panelClassName} flex min-h-[320px] flex-col items-center justify-center gap-3 px-6 py-10 text-center`}
+      className={`${panelClassName} flex min-h-[320px] flex-col items-center justify-center gap-3 px-6 py-10 text-center outline-none focus:outline-none`}
     >
       <h2 className="text-2xl font-bold text-slate-900">No active round</h2>
       <p className="max-w-xl text-slate-700">
